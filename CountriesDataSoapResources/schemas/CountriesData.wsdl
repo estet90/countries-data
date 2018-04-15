@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="CountriesData"
+	targetNamespace="http://CountriesData" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://CountriesData"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:documentation>
+		<wsdl:appinfo source="WMQI_APPINFO">
+			<MRWSDLAppInfo imported="true">
+				<binding hasEncoding="false" imported="true"
+					name="CountriesDataHttpBinding" originalBindingStyle="document" />
+			</MRWSDLAppInfo>
+		</wsdl:appinfo>
+	</wsdl:documentation>
+
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://CountriesData"
+			xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions">
+			<xsd:include schemaLocation="CountriesData.xsd" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="getCountryInfoByNameRequestMsg">
+		<wsdl:part element="tns:getCountryInfoByNameRequest" name="getCountryInfoByNameParameters" />
+	</wsdl:message>
+	<wsdl:message name="getCountryInfoByNameResponseMsg">
+		<wsdl:part element="tns:getCountryInfoByNameResponse" name="getCountryInfoByNameResult" />
+	</wsdl:message>
+	<wsdl:message name="getCountryInfoByCapitalRequestMsg">
+		<wsdl:part element="tns:getCountryInfoByCapitalRequest" name="getCountryInfoByCapitalParameters" />
+	</wsdl:message>
+	<wsdl:message name="getCountryInfoByCapitalResponseMsg">
+		<wsdl:part element="tns:getCountryInfoByCapitalResponse" name="getCountryInfoByCapitalResult" />
+	</wsdl:message>
+	<wsdl:message name="getCountriesInfoByAreaRequestMsg">
+		<wsdl:part element="tns:getCountriesInfoByAreaRequest" name="getCountriesInfoByAreaParameters" />
+	</wsdl:message>
+	<wsdl:message name="getCountriesInfoByAreaResponseMsg">
+		<wsdl:part element="tns:getCountriesInfoByAreaResponse" name="getCountriesInfoByAreaResult" />
+	</wsdl:message>
+
+	<wsdl:portType name="CountriesDataHttpPort">
+		<wsdl:operation name="getCountryInfoByName">
+			<wsdl:input message="tns:getCountryInfoByNameRequestMsg" name="getCountryInfoByNameRequest" />
+			<wsdl:output message="tns:getCountryInfoByNameResponseMsg" name="getCountryInfoByNameResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="getCountryInfoByCapital">
+			<wsdl:input message="tns:getCountryInfoByCapitalRequestMsg" name="getCountryInfoByCapitalRequest" />
+			<wsdl:output message="tns:getCountryInfoByCapitalResponseMsg" name="getCountryInfoByCapitalResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="getCountriesInfoByArea">
+			<wsdl:input message="tns:getCountriesInfoByAreaRequestMsg" name="getCountriesInfoByAreaRequest" />
+			<wsdl:output message="tns:getCountriesInfoByAreaResponseMsg" name="getCountriesInfoByAreaResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<wsdl:binding name="CountriesDataHttpBinding" type="tns:CountriesDataHttpPort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="getCountryInfoByName">
+			<soap:operation soapAction="http://CountriesData/getCountryInfoByName" />
+			<wsdl:input name="getCountryInfoByNameRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getCountryInfoByNameResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getCountryInfoByCapital">
+			<soap:operation soapAction="http://CountriesData/getCountryInfoByCapital" />
+			<wsdl:input name="getCountryInfoByCapitalRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getCountryInfoByCapitalResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getCountriesInfoByArea">
+			<soap:operation soapAction="http://CountriesData/getCountriesInfoByArea" />
+			<wsdl:input name="getCountriesInfoByAreaRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getCountriesInfoByAreaResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="CountriesDataHttpService">
+		<wsdl:port binding="tns:CountriesDataHttpBinding" name="CountriesDataHttpPort">
+			<soap:address location="http://localhost:7800/CountriesData" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

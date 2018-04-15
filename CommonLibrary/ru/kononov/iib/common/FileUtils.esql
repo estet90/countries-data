@@ -1,0 +1,17 @@
+/*
+ *
+ * переопределение параметров записи в файл
+ *
+ */
+
+BROKER SCHEMA ru.kononov.iib.common
+
+CREATE FUNCTION setDestinationFileDirectory(IN OutputLocalEnvironment REFERENCE, IN direcory CHARACTER)
+BEGIN
+	SET OutputLocalEnvironment.Destination.File.Directory = direcory;
+END;
+
+CREATE FUNCTION setDestinationFileName( IN OutputLocalEnvironment REFERENCE, IN name CHARACTER)
+BEGIN
+	SET OutputLocalEnvironment.Destination.File.Name = name;
+END;

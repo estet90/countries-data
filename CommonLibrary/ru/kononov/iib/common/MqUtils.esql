@@ -1,0 +1,17 @@
+/*
+ *
+ * переопределение параметров запросов к узлу MqOuput
+ *
+ */
+
+BROKER SCHEMA ru.kononov.iib.common
+
+CREATE FUNCTION setMQDestinationQueue(IN OutputLocalEnvironment REFERENCE, IN queueName CHARACTER)
+BEGIN
+	DECLARE I INTEGER CARDINALITY(OutputLocalEnvironment.Destination.MQ.DestinationData[]);
+	IF I = 0 THEN
+		SET OutputLocalEnvironment.Destination.MQ.DestinationData[1].queueName = queueName;
+	ELSE
+		SET OutputLocalEnvironment.Destination.MQ.DestinationData[I+1].queueName = queueName;
+	END IF;
+END;

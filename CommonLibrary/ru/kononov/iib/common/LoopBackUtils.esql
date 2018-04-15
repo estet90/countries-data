@@ -1,0 +1,29 @@
+/*
+ *
+ * переопределение параметров запросов к узлу LoopBackRequest
+ *
+ */
+
+BROKER SCHEMA ru.kononov.iib.common
+
+CREATE FUNCTION getLoopBackOperationNameRetrieve() RETURNS CHARACTER BEGIN RETURN 'Retrieve'; END;
+
+CREATE FUNCTION setLoopBackRequestOperation(IN OutputLocalEnvironment REFERENCE, IN operation CHARACTER)
+BEGIN
+	SET OutputLocalEnvironment.Destination.Loopback.Request.operation = operation;
+END;
+
+CREATE FUNCTION setLoopBackRequestObject(IN OutputLocalEnvironment REFERENCE, IN object CHARACTER)
+BEGIN
+	SET OutputLocalEnvironment.Destination.Loopback.Request.object = object;
+END;
+
+CREATE FUNCTION setLoopBackTimeout(IN OutputLocalEnvironment REFERENCE, IN timeout INTEGER)
+BEGIN
+	SET OutputLocalEnvironment.Destination.Loopback.Request.timeoutMilliseconds = timeout;
+END;
+
+CREATE FUNCTION setLoopBackRequestFilterWhere(IN OutputLocalEnvironment REFERENCE, IN condition CHARACTER)
+BEGIN
+	SET OutputLocalEnvironment.Destination.Loopback.Request.filter.where = condition;
+END;

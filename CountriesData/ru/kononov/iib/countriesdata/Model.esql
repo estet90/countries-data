@@ -1,0 +1,234 @@
+/*
+ *
+ * работа со структурой Environment.Variables, содержащей различные метаданные
+ *
+ */
+
+BROKER SCHEMA ru.kononov.iib.countriesdata
+
+/*
+ *
+ * получение очереди для логирования
+ *
+ * IN:		REFERENCE Environment - структура, содержащая метаданные
+ *
+ * RETURNS:	CHARACTER - очередь для логирования
+ *
+ */
+CREATE FUNCTION getLogQueue(IN Environment REFERENCE) RETURNS CHARACTER
+BEGIN RETURN Environment.Variables.LogQueue; END;
+
+/*
+ *
+ * установка очереди для логирования
+ *
+ * IN:	REFERENCE Environment - структура, содержащая метаданные
+ * IN:	CHARACTER logQueue - очередь для логирования
+ *
+ */
+CREATE FUNCTION setLogQueue(IN Environment REFERENCE, IN logQueue CHARACTER)
+BEGIN SET Environment.Variables.LogQueue = logQueue; END;
+
+/*
+ *
+ * получение директории для логирования
+ *
+ * IN:		REFERENCE Environment - структура, содержащая метаданные
+ *
+ * RETURNS:	CHARACTER - директория для логирования
+ *
+ */
+CREATE FUNCTION getLogDirecory(IN Environment REFERENCE) RETURNS CHARACTER
+BEGIN RETURN Environment.Variables.LogDirecory; END;
+
+/*
+ *
+ * установка директории для логирования
+ *
+ * IN:	REFERENCE Environment - структура, содержащая метаданные
+ * IN:	CHARACTER direcory - директория для логирования
+ *
+ */
+CREATE FUNCTION setLogDirecory(IN Environment REFERENCE, IN direcory CHARACTER)
+BEGIN SET Environment.Variables.LogDirecory = direcory; END;
+
+/*
+ *
+ * получение стадии обработки
+ *
+ * IN:		REFERENCE Environment - структура, содержащая метаданные
+ *
+ * RETURNS:	CHARACTER - стадия обработки
+ *
+ */
+CREATE FUNCTION getStage(IN Environment REFERENCE) RETURNS CHARACTER
+BEGIN RETURN Environment.Variables.Stage; END;
+
+/*
+ *
+ * установка стадии обработки
+ *
+ * IN:	REFERENCE Environment - структура, содержащая метаданные
+ * IN:	CHARACTER stage - директория для логирования
+ *
+ */
+CREATE FUNCTION setStage(IN Environment REFERENCE, IN stage CHARACTER)
+BEGIN SET Environment.Variables.Stage = stage; END;
+
+/*
+ *
+ * получение статуса обработки
+ *
+ * IN:		REFERENCE Environment - структура, содержащая метаданные
+ *
+ * RETURNS:	CHARACTER - статус обработки
+ *
+ */
+CREATE FUNCTION getStatus(IN Environment REFERENCE) RETURNS CHARACTER
+BEGIN RETURN Environment.Variables.Status; END;
+
+/*
+ *
+ * установка статуса обработки
+ *
+ * IN:	REFERENCE Environment - структура, содержащая метаданные
+ * IN:	CHARACTER status - статус обработки
+ *
+ */
+CREATE FUNCTION setStatus(IN Environment REFERENCE, IN status CHARACTER)
+BEGIN SET Environment.Variables.Status = status; END;
+
+/*
+ *
+ * получение наименования сервиса
+ *
+ * IN:		REFERENCE Environment - структура, содержащая метаданные
+ *
+ * RETURNS:	CHARACTER - наименование сервиса
+ *
+ */
+CREATE FUNCTION getServiceName(IN Environment REFERENCE) RETURNS CHARACTER
+BEGIN RETURN Environment.Variables.ServiceName; END;
+
+/*
+ *
+ * установка наименования сервиса
+ *
+ * IN:	REFERENCE Environment - структура, содержащая метаданные
+ * IN:	CHARACTER serviceName - наименование сервиса
+ *
+ */
+CREATE FUNCTION setServiceName(IN Environment REFERENCE, IN serviceName CHARACTER)
+BEGIN SET Environment.Variables.ServiceName = serviceName; END;
+
+/*
+ *
+ * получение идентификатора запроса
+ *
+ * IN:		REFERENCE Environment - структура, содержащая метаданные
+ *
+ * RETURNS:	CHARACTER - идентификатор запроса
+ *
+ */
+CREATE FUNCTION getReplyIdentifier(IN Environment REFERENCE) RETURNS BLOB
+BEGIN RETURN Environment.Variables.ReplyIdentifier; END;
+
+/*
+ *
+ * установка идентификатора запроса
+ *
+ * IN:	REFERENCE Environment - структура, содержащая метаданные
+ * IN:	CHARACTER replyIdentifier - идентификатор запроса
+ *
+ */
+CREATE FUNCTION setReplyIdentifier(IN Environment REFERENCE, IN replyIdentifier BLOB)
+BEGIN SET Environment.Variables.ReplyIdentifier = replyIdentifier; END;
+
+/*
+ *
+ * получение целочисленного параметра запроса к БД
+ *
+ * IN:		REFERENCE Environment - структура, содержащая метаданные
+ * IN:		CHARACTER paramName - наименование парамтра запроса
+ *
+ * RETURNS:	INTEGER - параметр запроса
+ *
+ */
+CREATE FUNCTION getRequestIntegerParam(IN Environment REFERENCE, IN paramName CHARACTER) RETURNS INTEGER
+BEGIN RETURN Environment.Variables.Request.Data.{paramName}; END;
+
+/*
+ *
+ * установка целочисленного параметра запроса
+ *
+ * IN:	REFERENCE Environment - структура, содержащая метаданные
+ * IN:	CHARACTER paramName - наименование парамтра запроса
+ * IN:	INTEGER param - параметр запроса
+ *
+ */
+CREATE FUNCTION setRequestIntegerParam(IN Environment REFERENCE, IN paramName CHARACTER, IN param INTEGER)
+BEGIN SET Environment.Variables.Request.Data.{paramName} = param; END;
+
+/*
+ *
+ * получение логического параметра запроса к БД
+ *
+ * IN:		REFERENCE Environment - структура, содержащая метаданные
+ * IN:		CHARACTER paramName - наименование парамтра запроса
+ *
+ * RETURNS:	BOOLEAN - параметр запроса
+ *
+ */
+CREATE FUNCTION getRequestBooleanParam(IN Environment REFERENCE, IN paramName CHARACTER) RETURNS BOOLEAN
+BEGIN RETURN Environment.Variables.Request.Data.{paramName}; END;
+
+/*
+ *
+ * установка логического параметра запроса
+ *
+ * IN:	REFERENCE Environment - структура, содержащая метаданные
+ * IN:	CHARACTER paramName - наименование парамтра запроса
+ * IN:	BOOLEAN param - параметр запроса
+ *
+ */
+CREATE FUNCTION setRequestBooleanParam(IN Environment REFERENCE, IN paramName CHARACTER, IN param BOOLEAN)
+BEGIN SET Environment.Variables.Request.Data.{paramName} = param; END;
+
+/*
+ *
+ * получение порядкового номера запроса
+ *
+ * IN:		REFERENCE Environment - структура, содержащая метаданные
+ *
+ * RETURNS:	INTEGER - порядковый номер запроса
+ *
+ */
+CREATE FUNCTION getRequestCurrentNumber(IN Environment REFERENCE) RETURNS INTEGER
+BEGIN RETURN Environment.Variables.Request.CurrentNumber; END;
+
+/*
+ *
+ * установка порядкового номера запроса
+ *
+ * IN:	REFERENCE Environment - структура, содержащая метаданные
+ * IN:	INTEGER currentNumber - порядковый номер запроса
+ *
+ */
+CREATE FUNCTION setRequestCurrentNumber(IN Environment REFERENCE, IN currentNumber INTEGER)
+BEGIN SET Environment.Variables.Request.CurrentNumber = currentNumber; END;
+
+/*
+ *
+ * инкремент порядкового номера запроса
+ *
+ * IN:	REFERENCE Environment - структура, содержащая метаданные
+ *
+ */
+CREATE FUNCTION incrementRequestCurrentNumber(IN Environment REFERENCE)
+BEGIN
+	IF (FIELDTYPE(Environment.Variables.Request.CurrentNumber) IS NULL) THEN
+		SET Environment.Variables.Request.CurrentNumber = 1;
+	ELSE
+		SET Environment.Variables.Request.CurrentNumber = Environment.Variables.Request.CurrentNumber + 1;
+	END IF;
+END;

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ComIbmCompute.msgnode="ComIbmCompute.msgnode" xmlns:ComIbmLabel.msgnode="ComIbmLabel.msgnode" xmlns:ComIbmRoute.msgnode="ComIbmRoute.msgnode" xmlns:ComIbmRouteToLabel.msgnode="ComIbmRouteToLabel.msgnode" xmlns:ComIbmSOAPInput.msgnode="ComIbmSOAPInput.msgnode" xmlns:ComIbmSOAPReply.msgnode="ComIbmSOAPReply.msgnode" xmlns:ComIbmTryCatch.msgnode="ComIbmTryCatch.msgnode" xmlns:com_ibm_connector_loopback_ComIbmRequest.msgnode="com/ibm/connector/loopback/ComIbmRequest.msgnode"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:eflow="http://www.ibm.com/wbi/2005/eflow" xmlns:ru_kononov_iib_countriesdata_Logger.subflow="ru/kononov/iib/countriesdata/Logger.subflow" xmlns:ru_kononov_iib_countriesdata_ProcessException.subflow="ru/kononov/iib/countriesdata/ProcessException.subflow" xmlns:utility="http://www.ibm.com/wbi/2005/eflow_utility" nsURI="ru/kononov/iib/countriesdata/Service.msgflow" nsPrefix="ru_kononov_iib_countriesdata_Service.msgflow">
+  <eClassifiers xmi:type="eflow:FCMComposite" name="FCMComposite_1">
+    <eSuperTypes href="http://www.ibm.com/wbi/2005/eflow#//FCMBlock"/>
+    <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="Property.logLevel" name="logLevel" lowerBound="1" defaultValueLiteral="3">
+      <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="Property.logQueue" name="logQueue" lowerBound="1" defaultValueLiteral="COUNTRIES_DATA.LOG">
+      <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="Property.logDirectory" name="logDirectory" lowerBound="1" defaultValueLiteral="/var/mqsi/logs/countriesData">
+      <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="Property.loopBackTimeout" name="loopBackTimeout" lowerBound="1" defaultValueLiteral="5000">
+      <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <translation xmi:type="utility:TranslatableString" key="Service" bundleName="ru/kononov/iib/countriesdata/Service" pluginId="CountriesData"/>
+    <colorGraphic16 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/CountriesData/icons/full/obj16/Service.gif"/>
+    <colorGraphic32 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/CountriesData/icons/full/obj30/Service.gif"/>
+    <composition>
+      <nodes xmi:type="ComIbmSOAPInput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_2" location="10,10" wsdlFileName="schemas/CountriesData.wsdl" selectedPortType="CountriesDataHttpPort" selectedBinding="CountriesDataHttpBinding" selectedPort="CountriesDataHttpPort" targetNamespace="http://CountriesData" useHTTPTransport="true" urlSelector="/CountriesData">
+        <translation xmi:type="utility:ConstantString" string="SOAP Input"/>
+      </nodes>
+      <nodes xmi:type="ComIbmSOAPReply.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_4" location="1060,280">
+        <translation xmi:type="utility:ConstantString" string="SOAP Reply"/>
+      </nodes>
+      <nodes xmi:type="ru_kononov_iib_countriesdata_Logger.subflow:FCMComposite_1" xmi:id="FCMComposite_1_1" location="100,100">
+        <translation xmi:type="utility:ConstantString" string="Logger"/>
+      </nodes>
+      <nodes xmi:type="ComIbmTryCatch.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_5" location="130,10">
+        <translation xmi:type="utility:ConstantString" string="Try Catch"/>
+      </nodes>
+      <nodes xmi:type="ru_kononov_iib_countriesdata_ProcessException.subflow:FCMComposite_1" xmi:id="FCMComposite_1_6" location="190,100">
+        <translation xmi:type="utility:ConstantString" string="ProcessException"/>
+      </nodes>
+      <nodes xmi:type="com_ibm_connector_loopback_ComIbmRequest.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_7" location="460,280" connectorName="iib-loopback-connector" dataSource="countries_data_db" object="object" operation="retrieve" timeoutMilliseconds="5000" dataLocation="$Body" outputDataLocation="$OutputRoot" copyToLocalEnv="true" messageDomainProperty="JSON">
+        <translation xmi:type="utility:ConstantString" string="LoopBackRequest"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_9" location="220,10" computeExpression="esql://routine/ru.kononov.iib.countriesdata#Service_LoggingRequest.Main" computeMode="all">
+        <translation xmi:type="utility:ConstantString" string="loggingRequest"/>
+      </nodes>
+      <nodes xmi:type="ComIbmRouteToLabel.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_11" location="340,10">
+        <translation xmi:type="utility:ConstantString" string="Route To Label"/>
+      </nodes>
+      <nodes xmi:type="ComIbmLabel.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_12" location="40,190" labelName="getCountryInfoByName">
+        <translation xmi:type="utility:ConstantString" string="getCountryInfoByName"/>
+      </nodes>
+      <nodes xmi:type="ComIbmLabel.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_13" location="40,280" labelName="getCountryInfoByCapital">
+        <translation xmi:type="utility:ConstantString" string="getCountryInfoByCapital"/>
+      </nodes>
+      <nodes xmi:type="ComIbmLabel.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_14" location="40,370" labelName="getCountriesInfoByArea">
+        <translation xmi:type="utility:ConstantString" string="getCountriesInfoByArea"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_15" location="220,190" computeExpression="esql://routine/ru.kononov.iib.countriesdata#Service_RequestGetCountryInfoByName.Main" computeMode="all">
+        <translation xmi:type="utility:ConstantString" string="RequestGetCountryInfoByName"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_16" location="220,280" computeExpression="esql://routine/ru.kononov.iib.countriesdata#Service_RequestGetCountryInfoByCapital.Main" computeMode="all">
+        <translation xmi:type="utility:ConstantString" string="RequestGetCountryInfoByCapital"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_17" location="220,370" computeExpression="esql://routine/ru.kononov.iib.countriesdata#Service_RequestGetCountriesInfoByArea.Main" computeMode="all">
+        <translation xmi:type="utility:ConstantString" string="RequestGetCountriesInfoByArea"/>
+      </nodes>
+      <nodes xmi:type="ComIbmRoute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_18" location="640,280" distributionMode="first">
+        <outTerminals terminalNodeID="Match" dynamic="true" label="Match"/>
+        <outTerminals terminalNodeID="getCountryInfoByName" dynamic="true" label="getCountryInfoByName"/>
+        <outTerminals terminalNodeID="getCountryInfoByCapital" dynamic="true" label="getCountryInfoByCapital"/>
+        <outTerminals terminalNodeID="getCountriesInfoByArea" dynamic="true" label="getCountriesInfoByArea"/>
+        <translation xmi:type="utility:ConstantString" string="Route"/>
+        <filterTable filterPattern="$Environment/Variables/ServiceName = 'getCountryInfoByName'" routingOutputTerminal="getCountryInfoByName"/>
+        <filterTable filterPattern="$Environment/Variables/ServiceName = 'getCountryInfoByCapital'" routingOutputTerminal="getCountryInfoByCapital"/>
+        <filterTable filterPattern="$Environment/Variables/ServiceName = 'getCountriesInfoByArea'" routingOutputTerminal="getCountriesInfoByArea"/>
+        <nsMappingTable nsPrefix="tns" namespace="http://schemas.xmlsoap.org/soap/envelope/"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_19" location="760,190" computeExpression="esql://routine/ru.kononov.iib.countriesdata#Service_ResponseGetCountryInfoByName.Main" computeMode="all">
+        <translation xmi:type="utility:ConstantString" string="ResponseGetCountryInfoByName"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_20" location="760,280" computeExpression="esql://routine/ru.kononov.iib.countriesdata#Service_ResponseGetCountryInfoByCapital.Main" computeMode="all">
+        <translation xmi:type="utility:ConstantString" string="ResponseGetCountryInfoByCapital"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_21" location="760,370" computeExpression="esql://routine/ru.kononov.iib.countriesdata#Service_ResponseGetCountriesInfoByArea.Main" computeMode="all">
+        <translation xmi:type="utility:ConstantString" string="ResponseGetCountriesInfoByArea"/>
+      </nodes>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_1" targetNode="FCMComposite_1_5" sourceNode="FCMComposite_1_2" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_6" targetNode="FCMComposite_1_9" sourceNode="FCMComposite_1_5" sourceTerminalName="OutTerminal.try" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_8" targetNode="FCMComposite_1_6" sourceNode="FCMComposite_1_5" sourceTerminalName="OutTerminal.catch" targetTerminalName="InTerminal.Input"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_11" targetNode="FCMComposite_1_11" sourceNode="FCMComposite_1_9" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_12" targetNode="FCMComposite_1_15" sourceNode="FCMComposite_1_12" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_13" targetNode="FCMComposite_1_16" sourceNode="FCMComposite_1_13" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_14" targetNode="FCMComposite_1_7" sourceNode="FCMComposite_1_16" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_15" targetNode="FCMComposite_1_7" sourceNode="FCMComposite_1_15" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_16" targetNode="FCMComposite_1_17" sourceNode="FCMComposite_1_14" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_17" targetNode="FCMComposite_1_7" sourceNode="FCMComposite_1_17" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_18" targetNode="FCMComposite_1_18" sourceNode="FCMComposite_1_7" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_19" targetNode="FCMComposite_1_19" sourceNode="FCMComposite_1_18" sourceTerminalName="getCountryInfoByName" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_20" targetNode="FCMComposite_1_20" sourceNode="FCMComposite_1_18" sourceTerminalName="getCountryInfoByCapital" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_21" targetNode="FCMComposite_1_21" sourceNode="FCMComposite_1_18" sourceTerminalName="getCountriesInfoByArea" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_23" targetNode="FCMComposite_1_4" sourceNode="FCMComposite_1_20" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_24" targetNode="FCMComposite_1_4" sourceNode="FCMComposite_1_19" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_25" targetNode="FCMComposite_1_4" sourceNode="FCMComposite_1_21" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_26" targetNode="FCMComposite_1_4" sourceNode="FCMComposite_1_6" sourceTerminalName="OutTerminal.Output" targetTerminalName="InTerminal.in">
+        <bendPoints>596,-11,-253,-191</bendPoints>
+      </connections>
+    </composition>
+    <propertyOrganizer>
+      <propertyDescriptor groupName="Group.Basic" configurable="true" userDefined="true" describedAttribute="Property.logLevel">
+        <propertyName xmi:type="utility:TranslatableString" key="Property.logLevel" bundleName="ru/kononov/iib/countriesdata/Service" pluginId="CountriesData"/>
+        <propertyDescriptor groupName="Group.Basic" configurable="true" userDefined="true" describedAttribute="Property.logQueue">
+          <propertyName xmi:type="utility:TranslatableString" key="Property.logQueue" bundleName="ru/kononov/iib/countriesdata/Service" pluginId="CountriesData"/>
+          <propertyDescriptor groupName="Group.Basic" configurable="true" userDefined="true" describedAttribute="Property.logDirectory">
+            <propertyName xmi:type="utility:TranslatableString" key="Property.logDirectory" bundleName="ru/kononov/iib/countriesdata/Service" pluginId="CountriesData"/>
+            <propertyDescriptor groupName="Group.Basic" configurable="true" userDefined="true" describedAttribute="Property.loopBackTimeout">
+              <propertyName xmi:type="utility:TranslatableString" key="Property.loopBackTimeout" bundleName="ru/kononov/iib/countriesdata/Service" pluginId="CountriesData"/>
+            </propertyDescriptor>
+          </propertyDescriptor>
+        </propertyDescriptor>
+      </propertyDescriptor>
+    </propertyOrganizer>
+    <stickyBoard/>
+  </eClassifiers>
+</ecore:EPackage>

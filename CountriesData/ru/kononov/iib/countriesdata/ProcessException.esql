@@ -1,0 +1,32 @@
+/*
+ *
+ * обрабобтка исключений
+ *
+ */
+BROKER SCHEMA ru.kononov.iib.countriesdata
+
+PATH ru.kononov.iib.common,
+ru.kononov.iib.countriesdata.soapresources;
+
+/*
+ *
+ * формирование сообщения об ошибке
+ *
+ */
+CREATE COMPUTE MODULE ProcessException_createAndPropagateErrorMessage
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		CALL setStatus(Environment, STATUS_ERROR);
+		DECLARE code CHARACTER getLastExceptionCode(InputExceptionList);
+		DECLARE message CHARACTER getLastExceptionMessage(InputExceptionList);
+		DECLARE description CHARACTER getLastExceptionDescription(InputExceptionList);
+
+		CALL createFault(OutputRoot);
+		CALL setFaultCode(OutputRoot, code);
+		CALL setFaultString(OutputRoot, message);
+		CALL setFaultActor(OutputRoot, SERVICE_CONTEXT);
+		CALL setFaultDetailText(OutputRoot, description);
+		CALL loggingError(OutputRoot);
+		RETURN TRUE;
+	END;
+END MODULE;

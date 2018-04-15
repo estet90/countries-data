@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://CountriesData" xmlns:tns="http://CountriesData" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:complexType name="country">
+		<xsd:sequence>
+			<xsd:element name="name" nillable="false" type="xsd:string" />
+			<xsd:element name="capital" nillable="false" type="xsd:string" />
+			<xsd:element name="area" nillable="false" type="xsd:decimal" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="countries">
+		<xsd:sequence>
+			<xsd:element name="country" nillable="true" type="tns:country" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions" ibmSchExtn:docRoot="true" name="getCountryInfoByNameRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="name" nillable="false" type="xsd:string" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions" ibmSchExtn:docRoot="true" name="getCountryInfoByNameResponse">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="country" nillable="true" type="tns:country" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions" ibmSchExtn:docRoot="true" name="getCountryInfoByCapitalRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="capital" nillable="true" type="xsd:string" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions" ibmSchExtn:docRoot="true" name="getCountryInfoByCapitalResponse">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="country" nillable="true" type="tns:country" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions" ibmSchExtn:docRoot="true" name="getCountriesInfoByAreaRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="name" nillable="false" type="xsd:string" />
+				<xsd:element name="largerThan" nillable="false" type="xsd:boolean" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions" ibmSchExtn:docRoot="true" name="getCountriesInfoByAreaResponse">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="countries" nillable="true" type="tns:countries" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

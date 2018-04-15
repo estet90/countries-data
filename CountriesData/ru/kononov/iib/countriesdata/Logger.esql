@@ -1,0 +1,120 @@
+/*
+ *
+ * логирование
+ *
+ */
+
+BROKER SCHEMA ru.kononov.iib.countriesdata
+
+PATH ru.kononov.iib.countriesdata.soapresources,
+ru.kononov.iib.common;
+
+/*
+ *
+ * формирование заголовков MQRFH2.usr.Variables.LogDirectory 
+ * и MQRFH2.usr.Variables.LogFileName, которые потом используются для создания логов
+ * формат директории - /<каталог, определённый в свойсве потока logDirectory>/yyyy-MM-dd
+ * формат файла - <название сервиса>_<идентификатор запроса>_<стадия request/response>_<статус обработки success/error>.xml 
+ *
+ */
+CREATE COMPUTE MODULE Logger_PrepareLogging
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE outVariables REFERENCE TO OutputRoot;
+		CALL createMQRFH2Domain(OutputRoot);
+		CREATE FIELD OutputRoot.MQRFH2.usr.Variables AS outVariables;
+
+		DECLARE currentDate CHARACTER SUBSTRING(currentDatetimeToCharacterWithoutPunctuationMarks() FROM 1 FOR 10);
+		SET outVariables.LogDirectory = getLogDirecory(Environment) || '/' || currentDate;
+		DECLARE replyIdentifier CHARACTER SUBSTRING(CAST(getReplyIdentifier(Environment) AS CHARACTER) FROM 3 FOR 48);
+		SET outVariables.LogFileName = getServiceName(Environment) || '_' || replyIdentifier || '_'
+			|| getStage(Environment) || '_' || getStatus(Environment) || '.xml';
+
+		CALL createXMLNSCDomainWithDataFromSoapOrXmlnsc(OutputRoot, InputRoot);
+
+		CALL setMQDestinationQueue(OutputLocalEnvironment, getLogQueue(Environment));
+		RETURN TRUE;
+	END;
+END MODULE;
+
+
+/*
+ *
+ * создание в директории MQRFH2.usr.Variables.LogDirectory файла с именем MQRFH2.usr.Variables.LogFileName
+ *
+ */
+CREATE COMPUTE MODULE Logger_Logging
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		CALL createXMLNSCDomainWithData(OutputRoot, InputRoot.XMLNSC);
+		DECLARE variables REFERENCE TO InputRoot.MQRFH2.usr.Variables;
+		CALL setDestinationFileDirectory(OutputLocalEnvironment, variables.LogDirectory);
+		CALL setDestinationFileName(OutputLocalEnvironment, variables.LogFileName);
+		RETURN TRUE;
+	END;
+END MODULE;
+
+
+/*
+ *
+ * логирование запросов
+ *
+ * IN:	REFERENCE OutputRoot - структура, содержащая сообщение
+ *
+ */
+CREATE FUNCTION loggingRequest(IN OutputRoot REFERENCE)
+BEGIN
+	CALL propagateToLogLabel(OutputRoot, LOG_LEVEL_REQUEST);
+END;
+
+/*
+ *
+ * логирование ответов
+ *
+ * IN:	REFERENCE OutputRoot - структура, содержащая сообщение
+ *
+ */
+CREATE FUNCTION loggingResponse(IN OutputRoot REFERENCE)
+BEGIN
+	CALL propagateToLogLabel(OutputRoot, LOG_LEVEL_ALL);
+END;
+
+/*
+ *
+ * логирование ошибок
+ *
+ * IN:	REFERENCE OutputRoot - структура, содержащая сообщение
+ *
+ */
+CREATE FUNCTION loggingError(IN OutputRoot REFERENCE)
+BEGIN
+	CALL propagateToLogLabel(OutputRoot, LOG_LEVEL_ERROR_ONLY);
+END;
+
+/*
+ *
+ * отправка на узел LOGGING_LABEL_NAME сообщения, если это возможно
+ *
+ * IN:	REFERENCE OutputRoot - структура, содержащая сообщение
+ * IN:	INTEGER logLevelForCheck - уровень логирования, который сравнивается с уровнем, установленным для потока
+ *
+ */
+CREATE FUNCTION propagateToLogLabel(IN OutputRoot REFERENCE, IN logLevelForCheck INTEGER)
+BEGIN
+	IF needLogging(logLevelForCheck) THEN
+		PROPAGATE TO LABEL LOGGING_LABEL_NAME MESSAGE OutputRoot DELETE NONE;
+	END IF;
+END;
+
+/*
+ *
+ * сравнение уровня проверяемого логирования с уровнем, установленным для потока
+ * IN:		INTEGER logLevelForCheck - уровень логирования, который сравнивается с уровнем, установленным для потока
+ *
+ * RETURNS:	BOOLEAN - нужно ли выполнять логирование
+ *
+ */
+CREATE FUNCTION needLogging(IN logLevelForCheck INTEGER) RETURNS BOOLEAN
+BEGIN
+	RETURN logLevelForCheck <= logLevel;
+END;

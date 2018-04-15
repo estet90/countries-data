@@ -1,0 +1,262 @@
+/*
+ *
+ * обработка запросов
+ *
+ */
+BROKER SCHEMA ru.kononov.iib.countriesdata
+
+PATH ru.kononov.iib.countriesdata.soapresources,
+ru.kononov.iib.common;
+
+DECLARE logLevel EXTERNAL INTEGER 1;
+DECLARE logQueue EXTERNAL CHARACTER 'queue';
+DECLARE logDirectory EXTERNAL CHARACTER 'directory';
+DECLARE loopBackTimeout EXTERNAL INTEGER 5000;
+
+DECLARE COLLECTION_COUNTRIES CONSTANT CHARACTER 'countries';
+
+/*
+ *
+ * заполнение метаинформации и логирование запроса
+ *
+ */
+CREATE COMPUTE MODULE Service_LoggingRequest
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		CALL setStage(Environment, STAGE_REQUEST);
+		CALL setStatus(Environment, STATUS_SUCCESS);
+		DECLARE serviceName CHARACTER InputRoot.SOAP.Context.operation;
+		CALL setServiceName(Environment, serviceName);
+		CALL setLogQueue(Environment, logQueue);
+		CALL setLogDirecory(Environment, logDirectory);
+		CALL setReplyIdentifier(Environment, InputLocalEnvironment.Destination.SOAP.Reply.ReplyIdentifier);
+
+		SET OutputRoot = InputRoot;
+		CALL loggingRequest(OutputRoot);
+		SET OutputLocalEnvironment.Destination.RouterList.DestinationData[>].labelName = serviceName;
+		RETURN TRUE;
+	END;
+END MODULE;
+
+
+/*
+ *
+ * запрос к БД для получения данных по названию страны
+ *
+ */
+CREATE COMPUTE MODULE Service_RequestGetCountryInfoByName
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE name CHARACTER getCountryInfoByNameRequestCountryName(InputRoot);
+		CALL retreiveLoopBackRequest(OutputLocalEnvironment, '{"name":"' || name || '"}');
+		RETURN TRUE;
+	END;
+END MODULE;
+
+
+/*
+ *
+ * обработка ответа по получению данных по названию страны
+ *
+ */
+CREATE COMPUTE MODULE Service_ResponseGetCountryInfoByName
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		CALL setStage(Environment, STAGE_RESPONSE);
+		DECLARE inRoot REFERENCE TO InputRoot.JSON.Data;
+		IF (CARDINALITY(inRoot.[]) = 1) THEN
+			-- должно вернуться не больше одной записи, поэтому берём первую запись в массиве
+			DECLARE country REFERENCE TO InputRoot.JSON.Data.Item[>];
+			CALL createCountryInfoByNameResponse(OutputRoot);
+			CALL setCountryInfoByNameResponseCountryName(OutputRoot, country.name);
+			CALL setCountryInfoByNameResponseCountryCapital(OutputRoot, country.capital);
+			CALL setCountryInfoByNameResponseCountryArea(OutputRoot, country.area);
+		ELSE
+			CALL createFaultNotFound(OutputRoot);
+		END IF;
+		CALL loggingResponse(OutputRoot);
+		RETURN TRUE;
+	END;
+END MODULE;
+
+
+/*
+ *
+ * запрос к БД для получения данных по названию столицы
+ *
+ */
+CREATE COMPUTE MODULE Service_RequestGetCountryInfoByCapital
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE capital CHARACTER getCountryInfoByCapitalRequestCountryCapital(InputRoot);
+		CALL retreiveLoopBackRequest(OutputLocalEnvironment, '{"capital":"' || capital || '"}');
+		RETURN TRUE;
+	END;
+END MODULE;
+
+
+/*
+ *
+ * обработка ответа по получению данных по названию столицы
+ *
+ */
+CREATE COMPUTE MODULE Service_ResponseGetCountryInfoByCapital
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		CALL setStage(Environment, STAGE_RESPONSE);
+		DECLARE inRoot REFERENCE TO InputRoot.JSON.Data;
+		IF (CARDINALITY(inRoot.[]) = 1) THEN
+			-- должно вернуться не больше одной записи, поэтому берём первую запись в массиве
+			DECLARE country REFERENCE TO InputRoot.JSON.Data.Item[>];
+			CALL createCountryInfoByCapitalResponse(OutputRoot);
+			CALL setCountryInfoByCapitalResponseCountryName(OutputRoot, country.name);
+			CALL setCountryInfoByCapitalResponseCountryCapital(OutputRoot, country.capital);
+			CALL setCountryInfoByCapitalResponseCountryArea(OutputRoot, country.area);
+		ELSE
+			CALL createFaultNotFound(OutputRoot);
+		END IF;
+		CALL loggingResponse(OutputRoot);
+		RETURN TRUE;
+	END;
+END MODULE;
+
+/*
+ *
+ * запрос к БД для получения данных по площади.
+ * результат - страны с площадью больше (если параметр SOAP.Body.cd:getCountriesInfoByAreaRequest.largerThan = TRUE) 
+ * либо меньше в противном случае 
+ *
+ */
+CREATE COMPUTE MODULE Service_RequestGetCountriesInfoByArea
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		CALL incrementRequestCurrentNumber(Environment);
+		DECLARE currentRequestNumber INTEGER getRequestCurrentNumber(Environment);
+		CASE
+		WHEN currentRequestNumber = 1 THEN
+			-- запрос на получение страны по имени
+			CALL getCountryByName(InputRoot, OutputLocalEnvironment, Environment);
+		WHEN currentRequestNumber = 2 THEN
+			-- запрос на получение списка стран
+			CALL getCountriesInfoByArea(OutputLocalEnvironment, Environment);
+		END CASE;
+		RETURN TRUE;
+	END;
+	
+	/*
+	 *
+	 * получение страны по имени
+	 *
+	 * IN:	REFERENCE InputRoot - входящее SOAP-сообщение
+	 * IN:	REFERENCE OutputLocalEnvironment - структура для переопределения парамтетров запроса
+	 * IN:	REFERENCE Environment - структура, содержащая метаинформацию
+	 *
+	 */
+	CREATE FUNCTION getCountryByName(
+	IN InputRoot REFERENCE,
+	IN OutputLocalEnvironment REFERENCE,
+	IN Environment REFERENCE)
+	BEGIN
+		DECLARE name CHARACTER getCountriesInfoByAreaRequestCountryName(InputRoot);
+		DECLARE largerThan BOOLEAN getCountriesInfoByAreaRequestCountryLargerThan(InputRoot);
+		CALL setRequestBooleanParam(Environment, 'largerThan', largerThan);
+		CALL retreiveLoopBackRequest(OutputLocalEnvironment, '{"name":"' || name || '"}');
+	END;
+
+	/*
+	 *
+	 * получение стран по площади
+	 *
+	 * IN:	REFERENCE OutputLocalEnvironment - структура для переопределения парамтетров запроса
+	 * IN:	REFERENCE Environment - структура, содержащая метаинформацию
+	 *
+	 */
+	CREATE FUNCTION getCountriesInfoByArea(
+	IN OutputLocalEnvironment REFERENCE,
+	IN Environment REFERENCE)
+	BEGIN
+		DECLARE largerThan BOOLEAN getRequestBooleanParam(Environment, 'largerThan');
+		DECLARE area CHARACTER CAST(getRequestIntegerParam(Environment, 'area') AS CHARACTER);
+		DECLARE ltgt CHARACTER;
+		IF largerThan THEN
+			SET ltgt = 'gt';
+		ELSE
+			SET ltgt = 'lt';
+		END IF;
+		CALL retreiveLoopBackRequest(OutputLocalEnvironment, '{"area":{"' || ltgt || '": ' || area || '}}');
+	END;
+END MODULE;
+
+
+/*
+ *
+ * обработка ответа по получению данных по названию столицы
+ *
+ */
+CREATE COMPUTE MODULE Service_ResponseGetCountriesInfoByArea
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		CALL setStage(Environment, STAGE_RESPONSE);
+		DECLARE inRoot REFERENCE TO InputRoot.JSON.Data;
+		IF (CARDINALITY(inRoot.[]) > 0) THEN
+			-- обрабатывается список записей
+			DECLARE currentRequestNumber INTEGER getRequestCurrentNumber(Environment);
+			CASE
+			WHEN currentRequestNumber = 1 THEN
+				-- извлекаем параметр "площадь" для второго запроса
+				CALL setRequestIntegerParam(Environment, 'area', inRoot.Item[>].area);
+				PROPAGATE TO LABEL getServiceName(Environment);
+				RETURN FALSE;
+			WHEN currentRequestNumber = 2 THEN
+				CALL createCountriesInfoByAreaResponse(OutputRoot);
+				DECLARE country REFERENCE TO inRoot.Item[>];
+				WHILE LASTMOVE(country) DO
+					CALL addCountryToCountriesInfoByAreaResponse(OutputRoot, country);
+					MOVE country NEXTSIBLING;
+				END WHILE;
+			END CASE;
+		ELSE
+			CALL createFaultNotFound(OutputRoot);
+		END IF;
+		CALL loggingResponse(OutputRoot);
+		RETURN TRUE;
+	END;
+END MODULE;
+
+
+/*
+ *
+ * LoopBack запрос с установленными по умлочанию для потока параметрами
+ * название коллекции - "countries"
+ * тип запроса - "Retreive" - получение записей
+ * таймаут - настраиваемый параметр
+ *
+ * IN:	REFERENCE OutputLocalEnvironment - структура для переопределения парамтетров запроса
+ * IN:	CHARACTER request - тело запроса
+ *
+ */
+CREATE FUNCTION retreiveLoopBackRequest(
+IN OutputLocalEnvironment REFERENCE, 
+IN request CHARACTER)
+BEGIN
+	CALL setLoopBackRequestObject(OutputLocalEnvironment, COLLECTION_COUNTRIES);
+	CALL setLoopBackRequestOperation(OutputLocalEnvironment, getLoopBackOperationNameRetrieve());
+	CALL setLoopBackTimeout(OutputLocalEnvironment, loopBackTimeout);
+	CALL setLoopBackRequestFilterWhere(OutputLocalEnvironment, request);
+END;
+
+/*
+ *
+ * формирование сообщения об ошибке
+ *
+ * IN:	REFERENCE OutputRoot - создаваемое сообщение
+ *
+ */
+CREATE FUNCTION createFaultNotFound(IN OutputRoot REFERENCE)
+BEGIN
+	CALL createFault(OutputRoot);
+	CALL setFaultCode(OutputRoot, '0');
+	CALL setFaultString(OutputRoot, 'Ошибка при обработке полученных данных');
+	CALL setFaultActor(OutputRoot, SERVICE_CONTEXT);
+	CALL setFaultDetailText(OutputRoot, 'Данные по запросу не найдены');
+END;

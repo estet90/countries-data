@@ -1,0 +1,217 @@
+/*
+ *
+ * работа с SOAP-сообщениями
+ *
+ */
+
+BROKER SCHEMA ru.kononov.iib.countriesdata.soapresources
+
+PATH ru.kononov.iib.common;
+
+/*
+ *
+ * создание сообщения с ответом для сервиса getCountryInfoByName
+ * IN:	REFERENCE OutputRoot - сообщение
+ *
+ */
+CREATE FUNCTION createCountryInfoByNameResponse(IN OutputRoot REFERENCE)
+BEGIN
+	CALL createSOAPDomain(OutputRoot);
+	CREATE FIELD OutputRoot.SOAP.Body.cd:getCountryInfoByNameResponse;
+END;
+
+/*
+ *
+ * получение названия страны из запроса для сервиса getCountryInfoByName
+ * IN:	REFERENCE OutputRoot - сообщение
+ *
+ */
+CREATE FUNCTION getCountryInfoByNameRequestCountryName(IN OutputRoot REFERENCE) RETURNS CHARACTER
+BEGIN RETURN OutputRoot.SOAP.Body.cd:getCountryInfoByNameRequest.name; END;
+
+/*
+ *
+ * установка названия страны в ответе для сервиса getCountryInfoByName
+ * IN:	REFERENCE OutputRoot - сообщение
+ * IN:	CHARACTER name - название страны
+ *
+ */
+CREATE FUNCTION setCountryInfoByNameResponseCountryName(IN OutputRoot REFERENCE, IN name CHARACTER)
+BEGIN SET OutputRoot.SOAP.Body.cd:getCountryInfoByNameResponse.country.name = name; END;
+
+/*
+ *
+ * установка названия столицы в ответе для сервиса getCountryInfoByName
+ * IN:	REFERENCE OutputRoot - сообщение
+ * IN:	CHARACTER capital - столица
+ *
+ */
+CREATE FUNCTION setCountryInfoByNameResponseCountryCapital(IN OutputRoot REFERENCE, IN capital CHARACTER)
+BEGIN SET OutputRoot.SOAP.Body.cd:getCountryInfoByNameResponse.country.capital = capital; END;
+
+/*
+ *
+ * установка площади страны в ответе для сервиса getCountryInfoByName
+ * IN:	REFERENCE OutputRoot - сообщение
+ * IN:	INTEGER area - площадь страны
+ *
+ */
+CREATE FUNCTION setCountryInfoByNameResponseCountryArea(IN OutputRoot REFERENCE, IN area INTEGER)
+BEGIN SET OutputRoot.SOAP.Body.cd:getCountryInfoByNameResponse.country.area = area; END;
+
+
+/*
+ *
+ * создание сообщения с ответом для сервиса getCountryInfoByCapital
+ * IN:	REFERENCE OutputRoot - сообщение
+ *
+ */
+CREATE FUNCTION createCountryInfoByCapitalResponse(IN OutputRoot REFERENCE)
+BEGIN
+	CALL createSOAPDomain(OutputRoot);
+	CREATE FIELD OutputRoot.SOAP.Body.cd:getCountryInfoByCapitalResponse;
+END;
+
+/*
+ *
+ * получение столицы из запроса для сервиса getCountryInfoByCapital
+ * IN:	REFERENCE OutputRoot - сообщение
+ *
+ */
+CREATE FUNCTION getCountryInfoByCapitalRequestCountryCapital(IN OutputRoot REFERENCE) RETURNS CHARACTER
+BEGIN RETURN OutputRoot.SOAP.Body.cd:getCountryInfoByCapitalRequest.capital; END;
+
+/*
+ *
+ * установка названия страны в ответе для сервиса getCountryInfoByCapital
+ * IN:	REFERENCE OutputRoot - сообщение
+ * IN:	CHARACTER name - название страны
+ *
+ */
+CREATE FUNCTION setCountryInfoByCapitalResponseCountryName(IN OutputRoot REFERENCE, IN name CHARACTER)
+BEGIN SET OutputRoot.SOAP.Body.cd:getCountryInfoByCapitalResponse.country.name = name; END;
+
+/*
+ *
+ * установка названия столицы в ответе для сервиса getCountryInfoByCapital
+ * IN:	REFERENCE OutputRoot - сообщение
+ * IN:	CHARACTER capital - столица
+ *
+ */
+CREATE FUNCTION setCountryInfoByCapitalResponseCountryCapital(IN OutputRoot REFERENCE, IN capital CHARACTER)
+BEGIN SET OutputRoot.SOAP.Body.cd:getCountryInfoByCapitalResponse.country.capital = capital; END;
+
+/*
+ *
+ * установка площади страны в ответе для сервиса getCountryInfoByCapital
+ * IN:	REFERENCE OutputRoot - сообщение
+ * IN:	INTEGER area - площадь страны
+ *
+ */
+CREATE FUNCTION setCountryInfoByCapitalResponseCountryArea(IN OutputRoot REFERENCE, IN area INTEGER)
+BEGIN SET OutputRoot.SOAP.Body.cd:getCountryInfoByCapitalResponse.country.area = area; END;
+
+
+/*
+ *
+ * создание сообщения с ответом для сервиса getCountriesInfoByArea
+ * IN:	REFERENCE OutputRoot - сообщение
+ *
+ */
+CREATE FUNCTION createCountriesInfoByAreaResponse(IN OutputRoot REFERENCE)
+BEGIN
+	CALL createSOAPDomain(OutputRoot);
+	CREATE FIELD OutputRoot.SOAP.Body.cd:getCountriesInfoByAreaResponse;
+END;
+
+/*
+ *
+ * получение названия из запроса для сервиса getCountriesInfoByArea
+ * IN:	REFERENCE OutputRoot - сообщение
+ *
+ */
+CREATE FUNCTION getCountriesInfoByAreaRequestCountryName(IN OutputRoot REFERENCE) RETURNS CHARACTER
+BEGIN RETURN OutputRoot.SOAP.Body.cd:getCountriesInfoByAreaRequest.name; END;
+
+/*
+ *
+ * получение параметра больше(TRUE)/меньше(FALSE) из запроса для сервиса getCountriesInfoByArea
+ * IN:	REFERENCE OutputRoot - сообщение
+ *
+ */
+CREATE FUNCTION getCountriesInfoByAreaRequestCountryLargerThan(IN OutputRoot REFERENCE) RETURNS BOOLEAN
+BEGIN RETURN OutputRoot.SOAP.Body.cd:getCountriesInfoByAreaRequest.largerThan; END;
+
+/*
+ *
+ * добавление информации о стране
+ * IN:	REFERENCE OutputRoot - сообщение
+ * IN:	REFERENCE country - структура, содержащая информацию о стране
+ *
+ */
+CREATE FUNCTION addCountryToCountriesInfoByAreaResponse(IN OutputRoot REFERENCE, IN country REFERENCE)
+BEGIN
+	-- структура OutputRoot.SOAP.Body.cd:getCountriesInfoByAreaResponse должна быть сформирована
+	DECLARE response REFERENCE TO OutputRoot.SOAP.Body.cd:getCountriesInfoByAreaResponse;
+	IF (FIELDNAME(response.countries) IS NULL) THEN
+		CREATE FIRSTCHILD OF response TYPE XMLNSC.Folder NAME 'countries';
+	END IF;
+	CREATE LASTCHILD OF response.countries TYPE XMLNSC.Folder NAME 'country';
+	DECLARE newCountry REFERENCE TO response.countries.country[<];
+	SET newCountry.name = country.name;
+	SET newCountry.capital = country.capital;
+	SET newCountry.area = country.area;
+END;
+
+
+/*
+ *
+ * формирование сообщения об ошибке
+ * IN:	REFERENCE OutputRoot - сообщение
+ *
+ */
+CREATE FUNCTION createFault(IN OutputRoot REFERENCE)
+BEGIN
+	CALL createSOAPDomain(OutputRoot);
+	CREATE FIELD OutputRoot.SOAP.Body.soapenv:Fault;
+END;
+
+/*
+ *
+ * добавление кода ошибки
+ * IN:	REFERENCE OutputRoot - сообщение
+ * IN:	CHARACTER faultcode - код ошбки
+ *
+ */
+CREATE FUNCTION setFaultCode(IN OutputRoot REFERENCE, IN faultcode CHARACTER)
+BEGIN SET OutputRoot.SOAP.Body.soapenv:Fault.faultcode = faultcode; END;
+
+/*
+ *
+ * добавление сообщения об ошибке
+ * IN:	REFERENCE OutputRoot - сообщение
+ * IN:	CHARACTER faultstring - сообщение об ошибке
+ *
+ */
+CREATE FUNCTION setFaultString(IN OutputRoot REFERENCE, IN faultstring CHARACTER)
+BEGIN SET OutputRoot.SOAP.Body.soapenv:Fault.faultstring = faultstring; END;
+
+/*
+ *
+ * добавление корневого контекста сервиса
+ * IN:	REFERENCE OutputRoot - сообщение
+ * IN:	CHARACTER faultactor - корневой контекст сервиса
+ *
+ */
+CREATE FUNCTION setFaultActor(IN OutputRoot REFERENCE, IN faultactor CHARACTER)
+BEGIN SET OutputRoot.SOAP.Body.soapenv:Fault.faultactor = faultactor; END;
+
+/*
+ *
+ * добавление описания ошибки
+ * IN:	REFERENCE OutputRoot - сообщение
+ * IN:	CHARACTER text - описание ошибки
+ *
+ */
+CREATE FUNCTION setFaultDetailText(IN OutputRoot REFERENCE, IN text CHARACTER)
+BEGIN SET OutputRoot.SOAP.Body.soapenv:Fault.detail.text = text; END;

@@ -1,0 +1,64 @@
+/*
+ *
+ * получение информации об ошибках из InputExceptionList
+ *
+ */
+
+BROKER SCHEMA ru.kononov.iib.common
+
+CREATE FUNCTION getLastExceptionCode(IN excList REFERENCE) RETURNS INTEGER
+BEGIN
+	DECLARE result INTEGER 0;
+	DECLARE exc REFERENCE TO excList.*[1];
+	WHILE exc.Number IS NOT NULL DO
+		SET result = exc.Number;
+		MOVE exc LASTCHILD;
+	END WHILE;
+	RETURN result;
+END;
+
+CREATE FUNCTION getLastExceptionMessage(IN excList REFERENCE) RETURNS CHARACTER
+BEGIN
+	DECLARE result CHARACTER 'UNKNOWN';
+	DECLARE exc REFERENCE TO excList.*[1];
+	WHILE exc.Number IS NOT NULL DO
+		DECLARE Ins REFERENCE TO exc.Insert;
+		IF exc.Number = 5026 THEN
+			SET result = getExceptionMessageForXsdValidation(exc);
+		ELSE
+			SET result = Ins.Text;
+		END IF;
+		MOVE exc LASTCHILD;
+	END WHILE;
+	RETURN result;
+END;
+
+CREATE FUNCTION getExceptionMessageForXsdValidation(IN exc REFERENCE) RETURNS CHARACTER
+BEGIN
+	IF FIELDTYPE(exc.Insert[5].Text) IS NOT NULL THEN
+		RETURN exc.Insert[5].Text;
+	END IF;
+	RETURN 'UNKNOWN';
+END;
+
+CREATE FUNCTION getLastExceptionDescription(IN ex REFERENCE) RETURNS CHAR
+BEGIN
+	CALL findLastException(ex);
+	DECLARE msg CHAR ex.Text;
+	FOR i AS ex.Insert[] DO
+		IF i.Type = 5 THEN
+			IF LENGTH(msg) > 0 THEN
+				SET msg = msg || '. ';
+			END IF;
+			SET msg = msg || i.Text;
+		END IF;
+	END FOR;
+	RETURN msg;
+END;
+
+CREATE PROCEDURE findLastException(INOUT ex REFERENCE)
+BEGIN
+	WHILE EXISTS(ex.*[<].Number[]) DO
+		MOVE ex LASTCHILD;
+	END WHILE;
+END;

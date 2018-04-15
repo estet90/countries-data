@@ -1,0 +1,9 @@
+BROKER SCHEMA ru.kononov.iib.countriesdata
+
+DECLARE soapenv NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+
+DECLARE wsa NAMESPACE 'http://www.w3.org/2005/08/addressing';
+
+DECLARE xml NAMESPACE 'http://www.w3.org/XML/1998/namespace';
+
+DECLARE cd NAMESPACE 'http://CountriesData';

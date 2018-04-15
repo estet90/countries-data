@@ -1,0 +1,37 @@
+/*
+ *
+ * различные константы, используемые в данном приложении
+ *
+ */
+
+BROKER SCHEMA ru.kononov.iib.countriesdata
+
+-- корневой контекст для всех запросов, используется для логирования
+DECLARE SERVICE_CONTEXT CONSTANT CHARACTER '/CountriesData';
+
+-- названия операций, названия узлов для роутинга
+DECLARE SERVICE_GET_COUNTRY_INFO_BY_NAME CONSTANT CHARACTER 'getCountryInfoByName';
+
+DECLARE SERVICE_GET_COUNTRY_INFO_BY_CAPITAL CONSTANT CHARACTER 'getCountryInfoByCapital';
+
+DECLARE SERVICE_GET_COUNTRIES_INFO_BY_AREA CONSTANT CHARACTER 'getCountriesInfoByArea';
+
+-- название узла для логирования
+DECLARE LOGGING_LABEL_NAME CONSTANT CHARACTER 'logging';
+
+-- уровни логирования
+DECLARE LOG_LEVEL_ERROR_ONLY CONSTANT INTEGER 1; -- только ошибки
+
+DECLARE LOG_LEVEL_REQUEST CONSTANT INTEGER 2; -- ошибки, тело запроса
+
+DECLARE LOG_LEVEL_ALL CONSTANT INTEGER 3; -- логирование всего
+
+-- стадии
+DECLARE STAGE_REQUEST CONSTANT CHARACTER 'request';
+
+DECLARE STAGE_RESPONSE CONSTANT CHARACTER 'response';
+
+-- статусы обработки
+DECLARE STATUS_SUCCESS CONSTANT CHARACTER 'success';
+
+DECLARE STATUS_ERROR CONSTANT CHARACTER 'error';
