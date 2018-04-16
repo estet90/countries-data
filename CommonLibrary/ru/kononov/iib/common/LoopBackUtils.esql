@@ -6,23 +6,63 @@
 
 BROKER SCHEMA ru.kononov.iib.common
 
+/*
+ *
+ * возвращает название операции "Retreive"
+ * выделено в отдельную функцию, т.к. константы в других модулях не читаются
+ *
+ * RETURNS:	CHARACTER название операции Retreive
+ *
+ */
 CREATE FUNCTION getLoopBackOperationNameRetrieve() RETURNS CHARACTER BEGIN RETURN 'Retrieve'; END;
 
+/*
+ *
+ * переопределение операции для работы с БД
+ *
+ * IN:	REFERENCE OutputLocalEnvironment - структура для переопределения парамтетров запроса
+ * IN:	CHARACTER operation - операция
+ *
+ */
 CREATE FUNCTION setLoopBackRequestOperation(IN OutputLocalEnvironment REFERENCE, IN operation CHARACTER)
 BEGIN
 	SET OutputLocalEnvironment.Destination.Loopback.Request.operation = operation;
 END;
 
+/*
+ *
+ * переопределение таблицы/коллекции
+ *
+ * IN:	REFERENCE OutputLocalEnvironment - структура для переопределения парамтетров запроса
+ * IN:	CHARACTER object - таблица/коллекция
+ *
+ */
 CREATE FUNCTION setLoopBackRequestObject(IN OutputLocalEnvironment REFERENCE, IN object CHARACTER)
 BEGIN
 	SET OutputLocalEnvironment.Destination.Loopback.Request.object = object;
 END;
 
+/*
+ *
+ * переопределение таймаута
+ *
+ * IN:	REFERENCE OutputLocalEnvironment - структура для переопределения парамтетров запроса
+ * IN:	CHARACTER timeout - таймаут
+ *
+ */
 CREATE FUNCTION setLoopBackTimeout(IN OutputLocalEnvironment REFERENCE, IN timeout INTEGER)
 BEGIN
 	SET OutputLocalEnvironment.Destination.Loopback.Request.timeoutMilliseconds = timeout;
 END;
 
+/*
+ *
+ * формирование запроса типа "where"
+ *
+ * IN:	REFERENCE OutputLocalEnvironment - структура для переопределения парамтетров запроса
+ * IN:	CHARACTER condition - запрос
+ *
+ */
 CREATE FUNCTION setLoopBackRequestFilterWhere(IN OutputLocalEnvironment REFERENCE, IN condition CHARACTER)
 BEGIN
 	SET OutputLocalEnvironment.Destination.Loopback.Request.filter.where = condition;

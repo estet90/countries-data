@@ -6,6 +6,14 @@
 
 BROKER SCHEMA ru.kononov.iib.common
 
+/*
+ *
+ * возвращает код исключительной ситуации, которая описывает основную ошибку (первопричину ошибки)
+ *
+ * IN:		REFERENCE excList - структура, содержащая ошибку
+ *
+ * RETURNS:	INTEGER - код ошибки
+ */
 CREATE FUNCTION getLastExceptionCode(IN excList REFERENCE) RETURNS INTEGER
 BEGIN
 	DECLARE result INTEGER 0;
@@ -17,6 +25,14 @@ BEGIN
 	RETURN result;
 END;
 
+/*
+ *
+ * возвращает текстовое описание исключительной ситуации, которое описывает основную ошибку (первопричину ошибки)
+ *
+ * IN:		REFERENCE excList - структура, содержащая ошибку
+ *
+ * RETURNS:	CHARACTER - описание
+ */
 CREATE FUNCTION getLastExceptionMessage(IN excList REFERENCE) RETURNS CHARACTER
 BEGIN
 	DECLARE result CHARACTER 'UNKNOWN';
@@ -24,7 +40,9 @@ BEGIN
 	WHILE exc.Number IS NOT NULL DO
 		DECLARE Ins REFERENCE TO exc.Insert;
 		IF exc.Number = 5026 THEN
-			SET result = getExceptionMessageForXsdValidation(exc);
+			IF FIELDTYPE(exc.Insert[5].Text) IS NOT NULL THEN
+				SET result =  exc.Insert[5].Text;
+			END IF;
 		ELSE
 			SET result = Ins.Text;
 		END IF;
@@ -33,17 +51,19 @@ BEGIN
 	RETURN result;
 END;
 
-CREATE FUNCTION getExceptionMessageForXsdValidation(IN exc REFERENCE) RETURNS CHARACTER
-BEGIN
-	IF FIELDTYPE(exc.Insert[5].Text) IS NOT NULL THEN
-		RETURN exc.Insert[5].Text;
-	END IF;
-	RETURN 'UNKNOWN';
-END;
-
+/*
+ *
+ * возвращает текстовое описание исключительной ситуации с указанием метки и параметров
+ *
+ * IN:		REFERENCE excList - структура, содержащая ошибку
+ *
+ * RETURNS:	CHARACTER - описание
+ */
 CREATE FUNCTION getLastExceptionDescription(IN ex REFERENCE) RETURNS CHAR
 BEGIN
-	CALL findLastException(ex);
+	WHILE EXISTS(ex.*[<].Number[]) DO
+		MOVE ex LASTCHILD;
+	END WHILE;
 	DECLARE msg CHAR ex.Text;
 	FOR i AS ex.Insert[] DO
 		IF i.Type = 5 THEN
@@ -54,11 +74,4 @@ BEGIN
 		END IF;
 	END FOR;
 	RETURN msg;
-END;
-
-CREATE PROCEDURE findLastException(INOUT ex REFERENCE)
-BEGIN
-	WHILE EXISTS(ex.*[<].Number[]) DO
-		MOVE ex LASTCHILD;
-	END WHILE;
 END;

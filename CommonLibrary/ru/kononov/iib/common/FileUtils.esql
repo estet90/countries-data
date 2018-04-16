@@ -6,11 +6,27 @@
 
 BROKER SCHEMA ru.kononov.iib.common
 
+/*
+ *
+ * переопределение директории для создания файла
+ *
+ * IN:	REFERENCE OutputLocalEnvironment - структура для переопределения парамтетров запроса
+ * IN:	CHARACTER direcory - директория для записи
+ *
+ */
 CREATE FUNCTION setDestinationFileDirectory(IN OutputLocalEnvironment REFERENCE, IN direcory CHARACTER)
 BEGIN
 	SET OutputLocalEnvironment.Destination.File.Directory = direcory;
 END;
 
+/*
+ *
+ * перелпределение имени файла
+ *
+ * IN:	REFERENCE OutputLocalEnvironment - структура для переопределения парамтетров запроса
+ * IN:	CHARACTER name - имя файла
+ *
+ */
 CREATE FUNCTION setDestinationFileName( IN OutputLocalEnvironment REFERENCE, IN name CHARACTER)
 BEGIN
 	SET OutputLocalEnvironment.Destination.File.Name = name;

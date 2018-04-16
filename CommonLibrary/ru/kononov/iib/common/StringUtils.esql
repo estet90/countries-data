@@ -6,11 +6,27 @@
 
 BROKER SCHEMA ru.kononov.iib.common
 
+/*
+ *
+ * возвращает текущую дату-время в виде строки формате yyyy-MM-dd''T''HH:mm:ss.SSS
+ *
+ * RETURNS:	CHARACTER - дата-время в формате yyyy-MM-dd''T''HH:mm:ss.SSS
+ *
+ */
 CREATE FUNCTION currentDatetimeToCharacter() RETURNS CHARACTER
 BEGIN
 	RETURN CAST (CURRENT_TIMESTAMP AS CHARACTER FORMAT 'yyyy-MM-dd''T''HH:mm:ss.SSS');
 END;
 
+/*
+ *
+ * возвращает дату-время в виде строки без пробелов и символов ".", ":"
+ *
+ * IN:		CHARACTER datetime - дата-время в виде строки
+ *
+ * RETURNS:	CHARACTER - дата-время в виде строки
+ *
+ */
 CREATE FUNCTION timestampWithoutPunctuationMarks(IN datetime CHARACTER) RETURNS CHARACTER
 BEGIN
 	SET datetime = REPLACE(datetime, ' ', '');
@@ -19,6 +35,13 @@ BEGIN
 	RETURN datetime;
 END;
 
+/*
+ *
+ * возвращает текущую дату-время в виде строки формате yyyy-MM-ddTHHmmssSSS
+ *
+ * RETURNS:	CHARACTER - дата-время в формате yyyy-MM-ddTHHmmssSSS
+ *
+ */
 CREATE FUNCTION currentDatetimeToCharacterWithoutPunctuationMarks() RETURNS CHARACTER
 BEGIN
 	DECLARE currentDatetime CHARACTER currentDatetimeToCharacter();

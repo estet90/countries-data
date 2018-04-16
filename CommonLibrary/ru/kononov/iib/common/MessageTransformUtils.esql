@@ -6,6 +6,13 @@
 
 BROKER SCHEMA ru.kononov.iib.common
 
+/*
+ *
+ * создание структуры, содержащей заголовки MQMD
+ *
+ * IN:	REFERENCE outRoot - сообщение
+ *
+ */
 CREATE PROCEDURE createMQMDDomain(IN outRoot REFERENCE)
 BEGIN
 	IF FIELDNAME(outRoot.MQMD) IS NULL THEN
@@ -13,6 +20,13 @@ BEGIN
 	END IF;
 END;
 
+/*
+ *
+ * создание структуры, содержащей заголовки MQMD и MQRFH2
+ *
+ * IN:	REFERENCE outRoot - сообщение
+ *
+ */
 CREATE PROCEDURE createMQRFH2Domain(IN outRoot REFERENCE)
 BEGIN
 	CALL createMQMDDomain(outRoot);
@@ -22,6 +36,13 @@ BEGIN
 	END IF;
 END;
 
+/*
+ *
+ * создание домена XMLNSC
+ *
+ * IN:	REFERENCE outRoot - сообщение
+ *
+ */
 CREATE PROCEDURE createXMLNSCDomain(IN outRoot REFERENCE)
 BEGIN
 	IF FIELDNAME(outRoot.XMLNSC) IS NULL THEN
@@ -29,6 +50,14 @@ BEGIN
 	END IF;
 END;
 
+/*
+ *
+ * создание домена XMLNSC с данными
+ *
+ * IN:	REFERENCE outRoot - сообщение
+ * IN:	REFERENCE: data - данные
+ *
+ */
 CREATE PROCEDURE createXMLNSCDomainWithData(IN outRoot REFERENCE, IN data REFERENCE)
 BEGIN
 	IF FIELDNAME(outRoot.XMLNSC) IS NULL THEN
@@ -37,6 +66,14 @@ BEGIN
 	SET outRoot.XMLNSC = data;
 END;
 
+/*
+ *
+ * создание домена XMLNSC с данными из XMLNSC либо SOAP
+ *
+ * IN:	REFERENCE OutputRoot - сообщение
+ * IN:	REFERENCE: InputRoot - данные
+ *
+ */
 CREATE FUNCTION createXMLNSCDomainWithDataFromSoapOrXmlnsc(IN OutputRoot REFERENCE, IN InputRoot REFERENCE)
 BEGIN
 	IF (FIELDTYPE(InputRoot.SOAP.Body) IS NOT NULL) THEN
@@ -46,6 +83,13 @@ BEGIN
 	END IF;
 END;
 
+/*
+ *
+ * создание домена SOAP
+ *
+ * IN:	REFERENCE outRoot - сообщение
+ *
+ */
 CREATE PROCEDURE createSOAPDomain(IN outRoot REFERENCE)
 BEGIN
 	IF FIELDNAME(outRoot.SOAP) IS NULL THEN

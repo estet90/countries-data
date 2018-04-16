@@ -126,7 +126,7 @@ END MODULE;
  *
  * запрос к БД для получения данных по площади.
  * результат - страны с площадью больше (если параметр SOAP.Body.cd:getCountriesInfoByAreaRequest.largerThan = TRUE) 
- * либо меньше в противном случае 
+ * либо меньше в противном случае
  *
  */
 CREATE COMPUTE MODULE Service_RequestGetCountriesInfoByArea
