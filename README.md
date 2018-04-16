@@ -35,11 +35,21 @@
 Пример запуска:
 `./deploy_bar.sh MB test`
 
-### 4. Работа с приложением
-#### 4.1 Сервис getCountryInfoByName
+### 4. Настройка приложения
+* Через админку брокера можно установить свойства:
+<br/>
+*logLevel* - уровень логирования - 1 для логирования только ошибок, 2 логирование запроса и ошибок, 3 логирование всего
+<br/>
+*logDirectory* - базовый каталог для ведения логирование
+*logQueue* - очередь, с которой сообщения записываются в логирование
+*loopBackTimeout* - таймаут обращения к БД
+
+### 5. Работа с приложением
+
+#### 5.1 Сервис getCountryInfoByName
 Пример запроса:
 <br/>
-[http://localhost:7800/CountriesData]: http://localhost:7800/CountriesData
+http://localhost:7800/CountriesData
 <br/>
 `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:coun="http://CountriesData">
    <soapenv:Header/>
@@ -48,7 +58,91 @@
          <name>Россия</name>
       </coun:getCountryInfoByNameRequest>
    </soapenv:Body>
-</soapenv:Envelope>
-`
+</soapenv:Envelope>`
 <br/>
 Пример ответа:
+<br/>
+`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:coun="http://CountriesData">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <coun:getCountryInfoByNameResponse>
+         <name>Россия</name>
+         <capital>Москва</name>
+         <name>10000</name>
+      </coun:getCountryInfoByNameResponse>
+   </soapenv:Body>
+</soapenv:Envelope>`
+
+#### 5.2 Сервис getCountryInfoByCapital
+Пример запроса:
+<br/>
+http://localhost:7800/CountriesData
+<br/>
+`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:coun="http://CountriesData">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <coun:getCountryInfoByCapitalRequest>
+         <capital>Москва</capital>
+      </coun:getCountryInfoByCapitalRequest>
+   </soapenv:Body>
+</soapenv:Envelope>`
+<br/>
+Пример ответа:
+<br/>
+`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:coun="http://CountriesData">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <coun:getCountryInfoByCapitalResponse>
+         <name>Россия</name>
+         <capital>Москва</name>
+         <name>10000</name>
+      </coun:getCountryInfoByCapitalResponse>
+   </soapenv:Body>
+</soapenv:Envelope>`
+
+#### 5.3 Сервис getCountriesInfoByArea
+Пример запроса:
+<br/>
+http://localhost:7800/CountriesData
+<br/>
+`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:coun="http://CountriesData">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <coun:getCountriesInfoByAreaRequest>
+         <name>Страна Лимония</name>
+         <largerThan>FALSE</largerThan>
+      </coun:getCountriesInfoByAreaRequest>
+   </soapenv:Body>
+</soapenv:Envelope>`
+<br/>
+Пример ответа:
+<br/>
+`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:coun="http://CountriesData">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <coun:getCountriesInfoByAreaResponse>
+         <countries>
+             <country>
+                 <name>Россия</name>
+                 <capital>Москва</name>
+                 <name>10000</name>
+             </country>
+         </countries>
+      </coun:getCountriesInfoByAreaResponse>
+   </soapenv:Body>
+</soapenv:Envelope>`
+
+#### 5.4 Сообщение об ошибке
+`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:coun="http://CountriesData">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <soapenv:Fault>
+         <faultcode>0</faultcode>
+         <faultstring>Ошибка</faultstring>
+         <faulactor>/CountriesData</faulactor>
+         <detail>
+            <text>Описание ошибки</text>
+         </detail>
+      </soapenv:Fault>
+   </soapenv:Body>
+</soapenv:Envelope>`
