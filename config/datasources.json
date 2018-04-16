@@ -1,0 +1,10 @@
+{
+	"countries_data_db":{
+		"name":"countries_data_db",
+		"debug": true,
+		"connector":"mongodb",
+		"host":"127.0.0.1",
+		"port":27017,
+		"database":"countries_data"
+	}
+}
