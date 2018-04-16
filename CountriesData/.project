@@ -3,7 +3,6 @@
 	<name>CountriesData</name>
 	<comment></comment>
 	<projects>
-		<project>CountriesDataDb</project>
 		<project>CommonLibrary</project>
 		<project>CountriesDataSoapResources</project>
 	</projects>
