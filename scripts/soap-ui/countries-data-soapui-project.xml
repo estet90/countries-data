@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="4a77971c-c22a-4eae-a466-0575678a3126" activeEnvironment="Default" name="countries-data" resourceRoot="" soapui-version="5.4.0" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="5152cd76-5813-44de-9ef4-ad0c8cb495d0" wsaVersion="NONE" name="CountriesDataHttpBinding" type="wsdl" bindingName="{http://CountriesData}CountriesDataHttpBinding" soapVersion="1_1" anonymous="optional" definition="file:/home/iibuser/git/countries-data/CountriesDataSoapResources/schemas/CountriesData.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/home/iibuser/git/countries-data/CountriesDataSoapResources/schemas/CountriesData.wsdl"><con:part><con:url>file:/home/iibuser/git/countries-data/CountriesDataSoapResources/schemas/CountriesData.wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="CountriesData" targetNamespace="http://CountriesData" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://CountriesData" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:documentation>
+    <wsdl:appinfo source="WMQI_APPINFO">
+      <MRWSDLAppInfo imported="true">
+        <binding hasEncoding="false" imported="true" name="CountriesDataHttpBinding" originalBindingStyle="document"/>
+      </MRWSDLAppInfo>
+    </wsdl:appinfo>
+  </wsdl:documentation>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://CountriesData" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions">
+      <xsd:include schemaLocation="CountriesData.xsd"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="getCountryInfoByNameRequestMsg">
+    <wsdl:part element="tns:getCountryInfoByNameRequest" name="getCountryInfoByNameParameters"/>
+  </wsdl:message>
+  <wsdl:message name="getCountryInfoByNameResponseMsg">
+    <wsdl:part element="tns:getCountryInfoByNameResponse" name="getCountryInfoByNameResult"/>
+  </wsdl:message>
+  <wsdl:message name="getCountryInfoByCapitalRequestMsg">
+    <wsdl:part element="tns:getCountryInfoByCapitalRequest" name="getCountryInfoByCapitalParameters"/>
+  </wsdl:message>
+  <wsdl:message name="getCountryInfoByCapitalResponseMsg">
+    <wsdl:part element="tns:getCountryInfoByCapitalResponse" name="getCountryInfoByCapitalResult"/>
+  </wsdl:message>
+  <wsdl:message name="getCountriesInfoByAreaRequestMsg">
+    <wsdl:part element="tns:getCountriesInfoByAreaRequest" name="getCountriesInfoByAreaParameters"/>
+  </wsdl:message>
+  <wsdl:message name="getCountriesInfoByAreaResponseMsg">
+    <wsdl:part element="tns:getCountriesInfoByAreaResponse" name="getCountriesInfoByAreaResult"/>
+  </wsdl:message>
+  <wsdl:portType name="CountriesDataHttpPort">
+    <wsdl:operation name="getCountryInfoByName">
+      <wsdl:input message="tns:getCountryInfoByNameRequestMsg" name="getCountryInfoByNameRequest"/>
+      <wsdl:output message="tns:getCountryInfoByNameResponseMsg" name="getCountryInfoByNameResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="getCountryInfoByCapital">
+      <wsdl:input message="tns:getCountryInfoByCapitalRequestMsg" name="getCountryInfoByCapitalRequest"/>
+      <wsdl:output message="tns:getCountryInfoByCapitalResponseMsg" name="getCountryInfoByCapitalResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="getCountriesInfoByArea">
+      <wsdl:input message="tns:getCountriesInfoByAreaRequestMsg" name="getCountriesInfoByAreaRequest"/>
+      <wsdl:output message="tns:getCountriesInfoByAreaResponseMsg" name="getCountriesInfoByAreaResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CountriesDataHttpBinding" type="tns:CountriesDataHttpPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getCountryInfoByName">
+      <soap:operation soapAction="http://CountriesData/getCountryInfoByName"/>
+      <wsdl:input name="getCountryInfoByNameRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCountryInfoByNameResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCountryInfoByCapital">
+      <soap:operation soapAction="http://CountriesData/getCountryInfoByCapital"/>
+      <wsdl:input name="getCountryInfoByCapitalRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCountryInfoByCapitalResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCountriesInfoByArea">
+      <soap:operation soapAction="http://CountriesData/getCountriesInfoByArea"/>
+      <wsdl:input name="getCountriesInfoByAreaRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCountriesInfoByAreaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CountriesDataHttpService">
+    <wsdl:port binding="tns:CountriesDataHttpBinding" name="CountriesDataHttpPort">
+      <soap:address location="http://localhost:7800/CountriesData"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>file:/home/iibuser/git/countries-data/CountriesDataSoapResources/schemas/CountriesData.xsd</con:url><con:content><![CDATA[<xsd:schema targetNamespace="http://CountriesData" xmlns:tns="http://CountriesData" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:complexType name="country">
+    <xsd:sequence>
+      <xsd:element name="name" nillable="false" type="xsd:string"/>
+      <xsd:element name="capital" nillable="false" type="xsd:string"/>
+      <xsd:element name="area" nillable="false" type="xsd:decimal"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="countries">
+    <xsd:sequence>
+      <xsd:element name="country" nillable="true" type="tns:country"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element ibmSchExtn:docRoot="true" name="getCountryInfoByNameRequest" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="name" nillable="false" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element ibmSchExtn:docRoot="true" name="getCountryInfoByNameResponse" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="country" nillable="true" type="tns:country"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element ibmSchExtn:docRoot="true" name="getCountryInfoByCapitalRequest" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="capital" nillable="true" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element ibmSchExtn:docRoot="true" name="getCountryInfoByCapitalResponse" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="country" nillable="true" type="tns:country"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element ibmSchExtn:docRoot="true" name="getCountriesInfoByAreaRequest" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="name" nillable="false" type="xsd:string"/>
+        <xsd:element name="largerThan" nillable="false" type="xsd:boolean"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element ibmSchExtn:docRoot="true" name="getCountriesInfoByAreaResponse" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="countries" nillable="true" type="tns:countries"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:7800/CountriesData</con:endpoint></con:endpoints><con:operation id="b87f8a36-ed66-4604-b078-1bd4e18936f9" isOneWay="false" action="http://CountriesData/getCountriesInfoByArea" name="getCountriesInfoByArea" bindingOperationName="getCountriesInfoByArea" type="Request-Response" outputName="getCountriesInfoByAreaResponse" inputName="getCountriesInfoByAreaRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="d54111cd-e986-4e46-ab1b-a63a43ae9891" name="request"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:7800/CountriesData</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:coun="http://CountriesData">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <coun:getCountriesInfoByAreaRequest>
+         <name>Страна Лимония</name>
+         <largerThan>false</largerThan>
+      </coun:getCountriesInfoByAreaRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://CountriesData/getCountriesInfoByArea"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="0168ca5d-6838-4eab-8b9d-ba8f62ca3b83" isOneWay="false" action="http://CountriesData/getCountryInfoByCapital" name="getCountryInfoByCapital" bindingOperationName="getCountryInfoByCapital" type="Request-Response" outputName="getCountryInfoByCapitalResponse" inputName="getCountryInfoByCapitalRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="0148c860-f6d4-4450-8d5b-cb5763102c9b" name="request"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:7800/CountriesData</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:coun="http://CountriesData">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <coun:getCountryInfoByCapitalRequest>
+         <capital>Москва</capital>
+      </coun:getCountryInfoByCapitalRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://CountriesData/getCountryInfoByCapital"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="80bf0bcc-321c-4ff5-9ffc-2a90777d887e" isOneWay="false" action="http://CountriesData/getCountryInfoByName" name="getCountryInfoByName" bindingOperationName="getCountryInfoByName" type="Request-Response" outputName="getCountryInfoByNameResponse" inputName="getCountryInfoByNameRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="74b35f1f-202d-4375-8e93-01c44ea749bb" name="request"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:7800/CountriesData</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:coun="http://CountriesData">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <coun:getCountryInfoByNameRequest>
+         <name>Россия</name>
+      </coun:getCountryInfoByNameRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://CountriesData/getCountryInfoByName"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/></con:soapui-project>

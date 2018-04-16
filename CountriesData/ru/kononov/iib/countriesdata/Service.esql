@@ -72,6 +72,7 @@ CREATE COMPUTE MODULE Service_ResponseGetCountryInfoByName
 			CALL setCountryInfoByNameResponseCountryCapital(OutputRoot, country.capital);
 			CALL setCountryInfoByNameResponseCountryArea(OutputRoot, country.area);
 		ELSE
+			CALL setStatus(Environment, STATUS_ERROR);
 			CALL createFaultNotFound(OutputRoot);
 		END IF;
 		CALL loggingResponse(OutputRoot);
@@ -113,6 +114,7 @@ CREATE COMPUTE MODULE Service_ResponseGetCountryInfoByCapital
 			CALL setCountryInfoByCapitalResponseCountryCapital(OutputRoot, country.capital);
 			CALL setCountryInfoByCapitalResponseCountryArea(OutputRoot, country.area);
 		ELSE
+			CALL setStatus(Environment, STATUS_ERROR);
 			CALL createFaultNotFound(OutputRoot);
 		END IF;
 		CALL loggingResponse(OutputRoot);
@@ -216,6 +218,7 @@ CREATE COMPUTE MODULE Service_ResponseGetCountriesInfoByArea
 				END WHILE;
 			END CASE;
 		ELSE
+			CALL setStatus(Environment, STATUS_ERROR);
 			CALL createFaultNotFound(OutputRoot);
 		END IF;
 		CALL loggingResponse(OutputRoot);
